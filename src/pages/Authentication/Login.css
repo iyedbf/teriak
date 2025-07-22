@@ -1,0 +1,91 @@
+.login-background {
+  height: 110vh;
+  width: 99vw;
+
+background-image: url('/src/assets/images/login-illustration.png');
+  background-repeat: no-repeat;
+  background-size: cover ; /* ✅ montre toute l'image, sans la couper */
+  background-position: center center; /* ✅ centre l'image dans la vue */
+  background-color: #23254d;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+   overflow: hidden;
+}
+.login-card {
+  background: #ffffff;
+  padding: 32px 28px;
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+  max-width: 360px;
+  width: 100%;
+  z-index: 1;
+  transition: all 0.3s ease-in-out;
+}
+
+.login-card h2 {
+  font-size: 22px;
+  font-weight: 600;
+  text-align: center;
+  color: #222;
+  margin-bottom: 24px;
+  letter-spacing: 0.5px;
+}
+
+/* Input group styling */
+.input-group {
+  display: flex;
+  align-items: center;
+  margin-bottom: 18px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 0 12px;
+  background-color: #f9f9f9;
+  height: 42px;
+  transition: border 0.2s;
+}
+
+.input-group:hover {
+  border-color: #009287;
+}
+
+.input-icon {
+  font-size: 16px;
+  color: #666;
+  margin-right: 8px;
+}
+
+.input-group input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 15px;
+  background-color: transparent;
+}
+
+/* Button styling */
+.login-button {
+  width: 100%;
+  padding: 12px;
+  font-size: 15px;
+  font-weight: 500;
+  background-color: #009287;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.login-button:hover {
+  background-color: #007b73;
+}
+
+/* Error message */
+.error-message {
+  color: #d9534f;
+  font-size: 14px;
+  margin-bottom: 16px;
+  text-align: center;
+}

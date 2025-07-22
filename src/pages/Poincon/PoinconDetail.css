@@ -1,0 +1,87 @@
+/* Poincon.css */
+
+.poincon-container {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 20px 30px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #222;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #333;
+  font-weight: 600;
+}
+
+.back-btn {
+  display: inline-block;
+  margin-bottom: 20px;
+  padding: 8px 16px;
+  background-color: #3b82f6; /* bleu */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.back-btn:hover {
+  background-color: #2563eb;
+}
+
+.detail-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.detail-table th,
+.detail-table td {
+  text-align: left;
+  padding: 12px 15px;
+  border-bottom: 1px solid #ddd;
+  vertical-align: middle;
+}
+
+.detail-table th {
+  width: 30%;
+  background-color: #f3f4f6;
+  font-weight: 600;
+  color: #555;
+}
+
+.status-actif {
+  color: #16a34a; /* vert */
+  font-weight: 700;
+}
+
+.status-endommage {
+  color: #dc2626; /* rouge */
+  font-weight: 700;
+}
+
+.detail-table a {
+  color: #3b82f6;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.detail-table a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .poincon-container {
+    padding: 15px 20px;
+  }
+  .detail-table th,
+  .detail-table td {
+    padding: 10px 8px;
+  }
+}
