@@ -1,0 +1,26 @@
+/* fournisseurs-list.css */
+
+.page-container {
+  min-height: 100vh;
+  padding-top: 80px; /* Ajuste selon la hauteur de ton header */
+  padding-bottom: 60px;
+  background-color: #f9f9f9;
+}
+
+.fournisseurs-table {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.fournisseur-add-button {
+  display: flex;
+  justify-content: center;
+  margin-top: 24px;
+}
+
+.page-container {
+  padding-top: 100px; /* adapte à la hauteur exacte de ton header */
+  padding-bottom: 40px;
+  min-height: 100vh;
+  background-color: #f9f9f9;
+}

@@ -1,0 +1,15 @@
+/* fournisseurs-create.css */
+
+.create-page-container {
+  padding-top: 100px;  /* espace pour éviter le header */
+  padding-bottom: 40px;
+  min-height: 100vh;
+  background-color: #f9f9f9;
+}
+
+.create-form-box {
+  background: white;
+  padding: 32px;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
