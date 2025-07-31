@@ -1,15 +1,17 @@
-/* fournisseurs-create.css */
-
 .create-page-container {
-  padding-top: 100px;  /* espace pour éviter le header */
-  padding-bottom: 40px;
+  padding-top: 120px; /* hauteur du header (~80-100px) + marge */
   min-height: 100vh;
-  background-color: #f9f9f9;
+  background-color: #f8f9fa;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
 }
 
 .create-form-box {
-  background: white;
-  padding: 32px;
+  background-color: #ffffff;
+  padding: 2rem;
   border-radius: 12px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.05);
+  width: 100%;
+  max-width: 500px;
 }

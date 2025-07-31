@@ -818,136 +818,120 @@ const Navbar = (props) => {
                           show: invoice,
                         })}
                       >
-                      <Link to="/users-list" className="dropdown-item">
+<Link to="/users-list" className="dropdown-item">
   {props.t("User List")}
 </Link>
 <Link to="/users-detail" className="dropdown-item">
   {props.t("User Detail")}
 </Link>
+<Link to="/invoices-list" className="dropdown-item">
+  {props.t("Invoice List")}
+</Link>
+<Link to="/invoices-detail" className="dropdown-item">
+  {props.t("Invoice Detail")}
+</Link>
+</div>
+</div>
 
-                      </div>
-                    </div>
+<div className="dropdown">
+  <Link
+    to="/#"
+    className="dropdown-item  arrow-none"
+    onClick={(e) => {
+      e.preventDefault();
+      setauth(!auth);
+    }}
+  >
+    {props.t("Authentication")}{" "}
+    <div className="arrow-down"></div>
+  </Link>
+  <div className={classname("dropdown-menu", { show: auth })}>
+    <Link to="/pages-login" className="dropdown-item">
+      {props.t("Login")}
+    </Link>
+    <Link to="/pages-login-2" className="dropdown-item">
+      {props.t("Login 2")}
+    </Link>
+    <Link to="/pages-register" className="dropdown-item">
+      {props.t("Register")}
+    </Link>
+    <Link to="/pages-register-2" className="dropdown-item">
+      {props.t("Register 2")}
+    </Link>
+    <Link to="/page-recoverpw" className="dropdown-item">
+      {props.t("Recover Password")}
+    </Link>
+    <Link to="/page-recoverpw-2" className="dropdown-item">
+      {props.t("Recover Password 2")}
+    </Link>
+    <Link to="/auth-lock-screen" className="dropdown-item">
+      {props.t("Lock Screen")}
+    </Link>
+    <Link to="/auth-lock-screen-2" className="dropdown-item">
+      {props.t("Lock Screen 2")}
+    </Link>
+    <Link to="/page-confirm-mail" className="dropdown-item">
+      {props.t("Confirm Mail")}
+    </Link>
+    <Link to="/page-confirm-mail-2" className="dropdown-item">
+      {props.t("Confirm Mail 2")}
+    </Link>
+    <Link to="/auth-email-verification" className="dropdown-item">
+      {props.t("Email Verification")}
+    </Link>
+    <Link to="/auth-email-verification-2" className="dropdown-item">
+      {props.t("Email Verification 2")}
+    </Link>
+    <Link to="/auth-two-step-verification" className="dropdown-item">
+      {props.t("Two Step Verification")}
+    </Link>
+    <Link to="/auth-two-step-verification-2" className="dropdown-item">
+      {props.t("Two Step Verification 2")}
+    </Link>
+  </div>
+</div>
 
-                    <div className="dropdown">
-                      <Link
-                        to="/#"
-                        className="dropdown-item  arrow-none"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          setauth(!auth);
-                        }}
-                      >
-                        {props.t("Authentication")}{" "}
-                        <div className="arrow-down"></div>
-                      </Link>
-                      <div
-                        className={classname("dropdown-menu", { show: auth })}
-                      >
-                        <Link to="/pages-login" className="dropdown-item">
-                          {props.t("Login")}
-                        </Link>
-                        <Link to="/pages-login-2" className="dropdown-item">
-                          {props.t("Login 2")}
-                        </Link>
-                        <Link to="/pages-register" className="dropdown-item">
-                          {props.t("Register")}
-                        </Link>
-                        <Link to="/pages-register-2" className="dropdown-item">
-                          {props.t("Register 2")}
-                        </Link>
-                        <Link to="/page-recoverpw" className="dropdown-item">
-                          {props.t("Recover Password")}
-                        </Link>
-                        <Link to="/page-recoverpw-2" className="dropdown-item">
-                          {props.t("Recover Password 2")}
-                        </Link>
-                        <Link to="/auth-lock-screen" className="dropdown-item">
-                          {props.t("Lock Screen")}
-                        </Link>
-                        <Link
-                          to="/auth-lock-screen-2"
-                          className="dropdown-item"
-                        >
-                          {props.t("Lock Screen 2")}
-                        </Link>
-                        <Link to="/page-confirm-mail" className="dropdown-item">
-                          {props.t("Confirm Mail")}
-                        </Link>
-                        <Link
-                          to="/page-confirm-mail-2"
-                          className="dropdown-item"
-                        >
-                          {props.t("Confirm Mail 2")}
-                        </Link>
-                        <Link
-                          to="/auth-email-verification"
-                          className="dropdown-item"
-                        >
-                          {props.t("Email Verification")}
-                        </Link>
-                        <Link
-                          to="/auth-email-verification-2"
-                          className="dropdown-item"
-                        >
-                          {props.t("Email Verification 2")}
-                        </Link>
-                        <Link
-                          to="/auth-two-step-verification"
-                          className="dropdown-item"
-                        >
-                          {props.t("Two Step Verification")}
-                        </Link>
-                        <Link
-                          to="/auth-two-step-verification-2"
-                          className="dropdown-item"
-                        >
-                          {props.t("Two Step Verification 2")}
-                        </Link>
-                      </div>
-                    </div>
+<div className="dropdown">
+  <Link
+    className="dropdown-item  arrow-none"
+    to="/#"
+    onClick={(e) => {
+      e.preventDefault();
+      setutility(!utility);
+    }}
+  >
+    {props.t("Utility")} <div className="arrow-down"></div>
+  </Link>
+  <div className={classname("dropdown-menu", {
+    show: utility,
+  })}>
+    <Link to="/pages-starter" className="dropdown-item">
+      {props.t("Starter Page")}
+    </Link>
+    <Link to="/pages-maintenance" className="dropdown-item">
+      {props.t("Maintenance")}
+    </Link>
+    <Link to="/pages-comingsoon" className="dropdown-item">
+      {props.t("Coming Soon")}
+    </Link>
+    <Link to="/pages-timeline" className="dropdown-item">
+      {props.t("Timeline")}
+    </Link>
+    <Link to="/pages-faqs" className="dropdown-item">
+      {props.t("FAQs")}
+    </Link>
+    <Link to="/pages-pricing" className="dropdown-item">
+      {props.t("Pricing")}
+    </Link>
+    <Link to="/pages-404" className="dropdown-item">
+      {props.t("Error 404")}
+    </Link>
+    <Link to="/pages-500" className="dropdown-item">
+      {props.t("Error 500")}
+    </Link>
+  </div>
+</div>
 
-                    <div className="dropdown">
-                      <Link
-                        className="dropdown-item  arrow-none"
-                        to="/#"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          setutility(!utility);
-                        }}
-                      >
-                        {props.t("Utility")} <div className="arrow-down"></div>
-                      </Link>
-                      <div
-                        className={classname("dropdown-menu", {
-                          show: utility,
-                        })}
-                      >
-                        <Link to="/pages-starter" className="dropdown-item">
-                          {props.t("Starter Page")}
-                        </Link>
-                        <Link to="/pages-maintenance" className="dropdown-item">
-                          {props.t("Maintenance")}
-                        </Link>
-                        <Link to="/pages-comingsoon" className="dropdown-item">
-                          {props.t("Coming Soon")}
-                        </Link>
-                        <Link to="/pages-timeline" className="dropdown-item">
-                          {props.t("Timeline")}
-                        </Link>
-                        <Link to="/pages-faqs" className="dropdown-item">
-                          {props.t("FAQs")}
-                        </Link>
-                        <Link to="/pages-pricing" className="dropdown-item">
-                          {props.t("Pricing")}
-                        </Link>
-                        <Link to="/pages-404" className="dropdown-item">
-                          {props.t("Error 404")}
-                        </Link>
-                        <Link to="/pages-500" className="dropdown-item">
-                          {props.t("Error 500")}
-                        </Link>
-                      </div>
-                    </div>
                   </div>
                 </li>
               </ul>

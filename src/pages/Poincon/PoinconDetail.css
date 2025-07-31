@@ -1,0 +1,17 @@
+/* PoinconDetail.css */
+
+.poincon-detail-wrapper {
+  padding-top: 120px; /* espace pour éviter le chevauchement avec le header */
+  padding-bottom: 40px;
+  display: flex;
+  justify-content: center;
+}
+
+.poincon-detail-card {
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+  padding: 32px;
+  width: 100%;
+  max-width: 700px;
+}

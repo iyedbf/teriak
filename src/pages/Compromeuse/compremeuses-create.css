@@ -1,0 +1,15 @@
+/* compremeuses-create.css */
+
+.create-page-container {
+  min-height: 100vh;
+  background-color: #f9f9f9;
+  padding-top: 100px; /* ajuste selon la hauteur de ton header */
+  padding-bottom: 60px;
+}
+
+.create-form-box {
+  background-color: white;
+  padding: 32px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.08);
+}

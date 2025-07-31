@@ -1,0 +1,201 @@
+/* PoinconList.css */
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f0f4f8;
+  margin: 0;
+  padding: 0;
+  color: #222;
+}
+
+
+
+.poincon-container {
+  width: 100%;          /* prend toute la largeur */
+  max-width: 1600px;    /* largeur max plus large */
+  margin: 40px auto;
+  padding: 25px 30px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.07);
+  user-select: none;
+  box-sizing: border-box; /* inclure padding dans largeur */
+}
+
+.poincon-container h2 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #1e293b; /* Blue-gray-900 */
+  margin-bottom: 25px;
+  text-align: center;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  font-family: 'Poppins', sans-serif;
+}
+
+.table-responsive {
+ overflow-x: auto;  /* scrollbar horizontale si besoin */
+  -webkit-overflow-scrolling: touch; /* scroll fluide sur mobile */
+  width: 100%; 
+}
+
+.table-responsive::-webkit-scrollbar {
+  height: 8px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb {
+  background-color: #a0aec0;
+  border-radius: 10px;
+}
+
+table {
+width: 1200px;  /* largeur fixe plus large que le container si besoin */
+  border-collapse: separate;
+  border-spacing: 0 12px;
+}
+
+thead tr {
+  background-color: #009287;
+  border-radius: 12px;
+}
+
+thead th {
+  padding: 15px 20px;
+  color: white;
+  font-weight: 700;
+  text-align: left;
+  letter-spacing: 0.05em;
+}
+
+.search-input {
+  width: 100%;
+  max-width: 400px;
+  padding: 10px 15px;
+  margin-bottom: 20px;
+  border: 2px solid #3b82f6;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.search-input:focus {
+  border-color: #2563eb;
+  outline: none;
+}
+
+
+tbody tr {
+  background: #f9fafb;
+  transition: box-shadow 0.3s ease, transform 0.2s ease;
+  border-radius: 10px;
+  box-shadow: 0 0 0 transparent;
+}
+
+tbody tr:hover {
+  box-shadow: 0 10px 15px rgba(59,130,246,0.3);
+  transform: translateY(-3px);
+  background-color: #ffffff;
+}
+
+tbody td {
+  padding: 15px 20px;
+  color: #334155;
+  vertical-align: middle;
+  font-weight: 500;
+  font-size: 0.95rem;
+  border: none;
+}
+
+.add-btn-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+}
+
+.add-btn {
+  background-color: #10b981; /* green-500 */
+  color: white;
+  padding: 10px 20px;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.add-btn:hover {
+  background-color: #059669; /* green-600 */
+}
+
+/* Statut colors */
+
+.status-actif {
+  color: #16a34a; /* green-600 */
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.status-endommage {
+  color: #dc2626; /* red-600 */
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+/* Actions buttons */
+
+.actions-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 6px 8px;
+  border-radius: 6px;
+  transition: background-color 0.25s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.actions-btn:hover {
+  background-color: #e0e7ff;
+}
+
+.actions-btn svg {
+  width: 20px;
+  height: 20px;
+  stroke-width: 1.8;
+  stroke: #475569;
+  transition: stroke 0.25s ease;
+}
+
+.actions-btn.edit:hover svg {
+  stroke: #3b82f6; /* blue-500 */
+}
+
+.actions-btn.delete:hover svg {
+  stroke: #ef4444; /* red-500 */
+}
+
+/* Responsive */
+
+@media (max-width: 768px) {
+  .poincon-container {
+    padding: 20px 15px;
+    margin: 20px;
+  }
+
+  table {
+    min-width: unset;
+  }
+
+  thead th, tbody td {
+    padding: 12px 15px;
+  }
+
+  .actions-btn svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  
+}

@@ -12,7 +12,7 @@ import LayoutSaga from "./layout/saga";
 // Modules
 import ecommerceSaga from "./e-commerce/saga";
 import calendarSaga from "./calendar/saga";
-import chatSaga from "./chat/saga"; // ✅ le chat gère aussi les messages
+import chatSaga from "./chat/saga"; // gère aussi les messages
 import cryptoSaga from "./crypto/saga";
 import invoiceSaga from "./invoices/saga";
 import jobsSaga from "./jobs/saga";
@@ -37,7 +37,7 @@ export default function* rootSaga() {
     fork(LayoutSaga),
     fork(ecommerceSaga),
     fork(calendarSaga),
-    fork(chatSaga),               // ✅ gère les conversations/messages
+    fork(chatSaga),
     fork(mailsSaga),
     fork(cryptoSaga),
     fork(invoiceSaga),

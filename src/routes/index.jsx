@@ -19,10 +19,11 @@ import TasksCreate from "../pages/Tasks/tasks-create";
 import TasksKanban from "../pages/Tasks/tasks-kanban";
 
 // // //Projects
-import ProjectsGrid from "../pages/Projects/projects-grid";
-import ProjectsList from "../pages/Projects/projects-list";
-import ProjectsOverview from "../pages/Projects/ProjectOverview/projects-overview";
-import ProjectsCreate from "../pages/Projects/projects-create";
+
+import ProduitsList from "../pages/Produits/ProduitsList";
+import ProduitEdit from "../pages/Produits/ProduitEdit";
+
+import ProduitAdd from  "../pages/Produits/ProduitAdd";
 
 // // //Ecommerce Pages
 import EcommerceProducts from "../pages/Ecommerce/EcommerceProducts";
@@ -50,10 +51,20 @@ import FournisseursDetail from "../pages/Fournisseurs/fournisseurs-detail";
 import FournisseursEdit from "../pages/Fournisseurs/fournisseurs-edit"; 
 
 
+import AuditTrailPage from "../pages/AuditTrailPage/AuditTrailPage"; 
 
 
 //historique 
 import HistoriqueList from '../pages/Historique/HistoriqueList';
+
+
+
+//compromeuse list
+import CompromeuseList from '../pages/Compromeuse/compromeuse-list';
+import CompromeuseCreate from '../pages/Compromeuse/compremeuseCreate';
+import CompromeuseEdit from '../pages/Compromeuse/compremeuse-edit';
+
+
 
 
 
@@ -94,7 +105,6 @@ import UsersEdit from '../pages/users/users-edit'; // adapte le chemin
 import Dashboard from "../pages/Dashboard/index";
 import DashboardSaas from "../pages/Dashboard-saas/index";
 import DashboardCrypto from "../pages/Dashboard-crypto/index";
-
 import DashboardJob from "../pages/DashboardJob/index";
 
 // //Crypto
@@ -191,7 +201,16 @@ import PagesPricing from "../pages/Utility/pages-pricing";
 import Pages404 from "../pages/Utility/pages-404";
 import Pages500 from "../pages/Utility/pages-500";
 
+import PoinconList from "../pages/Poincon/Poincon-list";
+import PoinconEdit from "../pages/Poincon/PoinconEdit";
+import PoinconAdd from "../pages/Poincon/PoinconAdd";
+import DetailPoincon from "../pages/Poincon/Detail-poincon";
+import MarqueList from "../pages/Marque/Marque-list";
+import MarqueAdd from "../pages/Marque/MarqueAdd";
 
+import FormeAdd from "../pages/Poincon/FormeAdd";
+import UtilisationList from "../pages/Utilisation/Utilisation-list";
+import UtilisationAdd from "../pages/Utilisation/UtilisationAdd";
 
 const authProtectedRoutes = [
   { path: "/dashboard", component: <Dashboard /> },
@@ -205,6 +224,29 @@ const authProtectedRoutes = [
 { path: "/users/edit/:id", component: <UsersEdit /> },
 { path: "/users/:id", component: <UsersDetail /> },
 { path: "/users-list", component: <UsersList /> },
+
+
+// utilisation 
+  { path: "/utilisation-list", component: <UtilisationList /> },
+  { path: "/utilisation/add", component: <UtilisationAdd /> },
+
+// Forme 
+{ path: "/forme/add", component: <FormeAdd /> },
+
+  //Poincon 
+  { path: "/poincon-list", component: <PoinconList /> },
+{ path: "/poincons/add", component: <PoinconAdd /> },
+{ path: "/poincons/detail/:id", component: <DetailPoincon /> },
+ {  path: "/poincons/edit/:id",component: <PoinconEdit />},
+
+//compromeuse list
+{path: "/compremeuses", component: <CompromeuseList /> },
+{path: "/compremeuses/add", component: <CompromeuseCreate /> },
+{path: "/compremeuses/edit/:id", component: <CompromeuseEdit /> },
+//Marque
+{path: "/marque-list", component: <MarqueList /> },
+{path: "/marque/add", component: <MarqueAdd /> },
+
 
 //historique 
 
@@ -261,11 +303,10 @@ const authProtectedRoutes = [
   { path: "/tasks-kanban", component: <TasksKanban /> },
 
   //   //Projects
-  { path: "/projects-grid", component: <ProjectsGrid /> },
-  { path: "/projects-list", component: <ProjectsList /> },
-  { path: "/projects-overview", component: <ProjectsOverview /> },
-  { path: "/projects-overview/:id", component: <ProjectsOverview /> },
-  { path: "/projects-create", component: <ProjectsCreate /> },
+
+  { path: "/produits-list", component: <ProduitsList /> },
+  { path: "/produits-add", component: <ProduitAdd /> },
+  { path: "/produits-edit/:id", component: <ProduitEdit /> },
 
   // //   //Blog
   // { path: "/blog-list", component: <BlogList /> },
@@ -279,7 +320,6 @@ const authProtectedRoutes = [
   { path: "/job-apply", component: <ApplyJobs /> },
   { path: "/candidate-list", component: <CandidateList /> },
   { path: "/candidate-overview", component: <CandidateOverview /> },
-
 
 
   //   //Charts
@@ -348,7 +388,7 @@ const authProtectedRoutes = [
 
   //   // this route should be at the end of all other routes
   //   // eslint-disable-next-line react/display-name
-  { path: "/", exact: true, component: <Navigate to="/dashboard" /> },
+{ path: "/", exact: true, component: <Navigate to="/login" /> },
 ];
 
 const publicRoutes = [
@@ -362,6 +402,10 @@ const publicRoutes = [
   { path: "/pages-404", component: <Pages404 /> },
   { path: "/pages-500", component: <Pages500 /> },
   { path: "/crypto-ico-landing", component: <CryptoIcoLanding /> },
+
+
+    { path: "/audit-trail", component: <AuditTrailPage /> },
+
 
   //   // Authentication Inner
   { path: "/pages-login", component: <Login1 /> },

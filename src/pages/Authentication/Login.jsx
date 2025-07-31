@@ -315,7 +315,7 @@ const Login = () => {
   useEffect(() => {
     const authUser = localStorage.getItem('authUser');
     if (authUser) {
-      navigate('/dashboard');
+      navigate('/apps-filemanager');
     }
   }, [navigate]);
 
@@ -335,7 +335,7 @@ const Login = () => {
       localStorage.setItem('authUser', JSON.stringify(res.data.user));
 
       // ✅ Redirection
-      navigate('/dashboard');
+      navigate('/apps-filemanager');
     } catch (err) {
       if (err.response?.data?.message) {
         setError(err.response.data.message);

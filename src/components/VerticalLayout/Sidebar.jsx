@@ -3,7 +3,7 @@ import React from "react";
 import { connect } from "react-redux";
 import withRouter from "../Common/withRouter";
 
-//i18n
+// i18n
 import { withTranslation } from "react-i18next";
 import SidebarContent from "./SidebarContent";
 
@@ -37,6 +37,7 @@ const Sidebar = (props) => {
             </span>
           </Link>
         </div>
+
         <div data-simplebar className="h-100">
           {props.type !== "condensed" ? <SidebarContent /> : <SidebarContent />}
         </div>
@@ -56,6 +57,7 @@ const mapStatetoProps = (state) => {
     layout: state.Layout,
   };
 };
+
 export default connect(
   mapStatetoProps,
   {}

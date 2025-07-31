@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import { isEmpty } from "lodash";
-
 import {
   Button,
   Card,
@@ -19,468 +17,327 @@ import {
 } from "reactstrap";
 import * as Yup from "yup";
 import { useFormik } from "formik";
-
-//Import Breadcrumb
+import axios from "axios";
+import * as jwt_decode from "jwt-decode";
 import Breadcrumbs from "/src/components/Common/Breadcrumb";
-
-import {
-  addNewEvent as onAddNewEvent,
-  deleteEvent as onDeleteEvent,
-  getCategories as onGetCategories,
-  getEvents as onGetEvents,
-  updateEvent as onUpdateEvent,
-} from "/src/store/actions";
-
 import DeleteModal from "./DeleteModal";
-
-//import Images
-import verification from "../../assets/images/verification-img.png";
-
-//redux
-import { useSelector, useDispatch } from "react-redux";
-import { createSelector } from "reselect";
-
-// import "@fullcalendar/react/dist/vdom";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
-import interactionPlugin, { Draggable } from "@fullcalendar/interaction";
+import interactionPlugin from "@fullcalendar/interaction";
 import BootstrapTheme from "@fullcalendar/bootstrap";
-import listPlugin from '@fullcalendar/list';
-import allLocales from '@fullcalendar/core/locales-all';
+import listPlugin from "@fullcalendar/list";
+import allLocales from "@fullcalendar/core/locales-all";
+import verification from "../../assets/images/verification-img.png";
 
-const Calender = (props) => {
-  //meta title
-  document.title = "Full Calendar | Skote - Vite React Admin & Dashboard Template";
+const EntretienCalendar = () => {
+  document.title = "Calendrier des entretiens";
 
-  const dispatch = useDispatch();
-
-  const [event, setEvent] = useState({});
+  // States
+  const [entretien, setEntretien] = useState({});
   const [isEdit, setIsEdit] = useState(false);
+  const [entretienEvents, setEntretienEvents] = useState([]);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [deleteId, setDeleteId] = useState(null);
+  const [deleteModal, setDeleteModal] = useState(false);
+  const [produits, setProduits] = useState([]);
+  const [userId, setUserId] = useState(null);
 
-  const categoryValidation = useFormik({
-    // enableReinitialize : use this flag when initial values needs to be changed
+  // Decode le token pour récupérer l'id utilisateur (gestion compatible avec Vite)
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        const decoded = typeof jwt_decode === "function" ? jwt_decode(token) : jwt_decode.default(token);
+        setUserId(decoded.id || decoded.userId || null);
+      } catch (err) {
+        console.error("Erreur décodage token:", err);
+      }
+    }
+  }, []);
+
+  // Fonction utilitaire pour créer headers avec token
+  const getAuthHeaders = () => {
+    const token = localStorage.getItem("token");
+    if (!token) throw new Error("Token manquant");
+    return { Authorization: `Bearer ${token}` };
+  };
+
+  // Fetch produits
+  const fetchProduits = async () => {
+    try {
+      const res = await axios.get("http://localhost:5000/api/produits", {
+        headers: getAuthHeaders(),
+      });
+      setProduits(res.data);
+    } catch (err) {
+      console.error("Erreur lors du chargement des produits :", err.response?.data || err.message);
+    }
+  };
+
+  // Fetch entretiens
+  const fetchEntretiens = async () => {
+    try {
+      const res = await axios.get("http://localhost:5000/api/entretiens", {
+        headers: getAuthHeaders(),
+      });
+
+      const events = res.data.map((e) => ({
+        id: e._id,
+        title: `Entretien: ${e.produit?.code || "Sans produit"}`,
+        start: new Date(e.date),
+        extendedProps: {
+          produitId: e.produit?._id,
+          produitCode: e.produit?.code,
+          commentaire: e.nettoyage?.produit || "",
+        },
+        className: "bg-info text-white",
+      }));
+
+      setEntretienEvents(events);
+    } catch (err) {
+      console.error("Erreur lors du chargement des entretiens :", err.response?.data || err.message);
+    }
+  };
+
+  // Initial fetch des données
+  useEffect(() => {
+    fetchProduits();
+    fetchEntretiens();
+  }, []);
+
+  // Formik setup
+  const formik = useFormik({
     enableReinitialize: true,
-
     initialValues: {
-      title: (event && event.title) || '',
-      category: (event && event.category) || '',
+      produit: entretien.produit || "",
+      commentaire: entretien.commentaire || "",
+      date: entretien.date
+        ? new Date(entretien.date).toISOString().substr(0, 10)
+        : selectedDate
+        ? selectedDate.toISOString().substr(0, 10)
+        : "",
     },
     validationSchema: Yup.object({
-      title: Yup.string().required("Please Enter Your Event Name"),
-      category: Yup.string().required("Please Enter Your Billing Name"),
+      produit: Yup.string().required("Produit requis"),
+      commentaire: Yup.string().required("Commentaire requis"),
+      date: Yup.date().required("Date requise"),
     }),
-    onSubmit: (values) => {
-      if (isEdit) {
-        const updateEvent = {
-          id: event.id,
-          title: values.title,
-          classNames: values.category + " text-white",
-          start: event.start,
+    onSubmit: async (values) => {
+      try {
+        const dateISO = new Date(values.date).toISOString();
+
+        const payload = {
+          reference: `ENT-${Math.floor(Math.random() * 10000)}`,
+          date: dateISO,
+          produit: values.produit,
+          nettoyage: {
+            date: dateISO,
+            produit: values.commentaire,
+          },
+          lubrification: {
+            date: dateISO,
+            produit: "",
+          },
+          utilisateurs: userId ? [userId] : [],
         };
-        // update event
-        dispatch(onUpdateEvent(updateEvent));
-        categoryValidation.resetForm();
-      } else {
+
+        const res = await axios.post("http://localhost:5000/api/entretiens", payload, {
+          headers: getAuthHeaders(),
+        });
+
+        const saved = res.data;
+
+        const produitInfo = produits.find((p) => p._id === values.produit);
+
         const newEvent = {
-          id: Math.floor(Math.random() * 100),
-          title: values["title"],
-          start: selectedDay ? selectedDay.date : new Date(),
-          className: values['category']
-            ? values['category'] + " text-white"
-            : "bg-primary text-white"
-          ,
+          id: saved._id,
+          title: `Entretien: ${produitInfo?.code || values.produit}`,
+          start: new Date(dateISO),
+          extendedProps: {
+            produitId: values.produit,
+            produitCode: produitInfo?.code || values.produit,
+            commentaire: values.commentaire,
+          },
+          className: "bg-info text-white",
         };
-        // save new event
-        dispatch(onAddNewEvent(newEvent));
-        categoryValidation.resetForm()
+
+        setEntretienEvents((prev) => [...prev, newEvent]);
+        toggleModal();
+      } catch (err) {
+        console.error("Erreur lors de la sauvegarde :", err.response?.data?.message || err.message);
       }
-      toggle();
     },
   });
 
-  const CalendarProperties = createSelector(
-    (state) => state.calendar,
-    (Calendar) => ({
-      events: Calendar.events,
-      categories: Calendar.categories,
-    })
-  );
-
-  const {
-    events,
-    categories
-  } = useSelector(CalendarProperties);
-
-  const [deleteId, setDeleteId] = useState();
-  const [deleteModal, setDeleteModal] = useState(false);
-  const [modalCategory, setModalCategory] = useState(false);
-  const [selectedDay, setSelectedDay] = useState(0);
-
+  // Mise à jour selectedDate quand date change dans formulaire
   useEffect(() => {
-    dispatch(onGetCategories());
-    dispatch(onGetEvents());
-    new Draggable(document.getElementById("external-events"), {
-      itemSelector: ".external-event",
-    });
-  }, [dispatch]);
-
-  useEffect(() => {
-    if (!modalCategory && !isEmpty(event) && !!isEdit) {
-      setTimeout(() => {
-        setEvent({});
-        setIsEdit(false);
-      }, 500);
+    if (formik.values.date) {
+      setSelectedDate(new Date(formik.values.date));
     }
-  }, [modalCategory, event]);
+  }, [formik.values.date]);
 
-  /**
-   * Handling the modal state
-   */
-  const toggle = () => {
-    if (modalCategory) {
-      setModalCategory(false);
-      setEvent(null);
-      setIsEdit(false);
-    } else {
-      setModalCategory(true);
-    }
-  }
-  /**
-   * Handling date click on calendar
-   */
+  const toggleModal = () => {
+    setModalOpen(!modalOpen);
+    setIsEdit(false);
+    setEntretien({});
+    setSelectedDate(null);
+    formik.resetForm();
+  };
+
   const handleDateClick = (arg) => {
-    const date = arg["date"];
-    const day = date.getDate();
-    const month = date.getMonth();
-    const year = date.getFullYear();
-
-    const currectDate = new Date();
-    const currentHour = currectDate.getHours();
-    const currentMin = currectDate.getMinutes();
-    const currentSec = currectDate.getSeconds();
-    const modifiedDate = new Date(
-      year,
-      month,
-      day,
-      currentHour,
-      currentMin,
-      currentSec
-    );
-    const modifiedData = { ...arg, date: modifiedDate };
-
-    setSelectedDay(modifiedData);
-    toggle();
+    setSelectedDate(arg.date);
+    setEntretien({});
+    setIsEdit(false);
+    toggleModal();
   };
 
-  /**
-   * Handling click on event on calendar
-   */
   const handleEventClick = (arg) => {
-    const event = arg.event;
-    setEvent({
-      id: event.id,
-      title: event.title,
-      // title_category: event.title_category,
-      start: event.start,
-      className: event.classNames,
-      category: event.classNames[0],
-      event_category: event.classNames[0],
+    const evt = arg.event;
+    setEntretien({
+      id: evt.id,
+      reference: evt.id,
+      produit: evt.extendedProps.produitId,
+      commentaire: evt.extendedProps.commentaire,
+      date: evt.start,
     });
-    setDeleteId(event.id)
+    setSelectedDate(evt.start);
     setIsEdit(true);
-    setModalCategory(true)
-    toggle();
+    setDeleteId(evt.id);
+    toggleModal();
   };
 
-  /**
-   * On delete event
-   */
-  const handleDeleteEvent = () => {
-    if (deleteId) {
-      dispatch(onDeleteEvent(deleteId));
+  const handleDelete = async () => {
+    try {
+      await axios.delete(`http://localhost:5000/api/entretiens/${deleteId}`, {
+        headers: getAuthHeaders(),
+      });
+      setEntretienEvents((prev) => prev.filter((evt) => evt.id !== deleteId));
+      setDeleteModal(false);
+      toggleModal();
+    } catch (err) {
+      console.error("Erreur lors de la suppression :", err.response?.data || err.message);
     }
-    setDeleteModal(false);
-  };
-
-  /**
-   * On category darg event
-   */
-  const onDrag = (event) => {
-    event.preventDefault();
-  };
-
-  /**
-   * On calendar drop event
-   */
-  const onDrop = (event) => {
-    const date = event["date"];
-    const day = date.getDate();
-    const month = date.getMonth();
-    const year = date.getFullYear();
-
-    const currectDate = new Date();
-    const currentHour = currectDate.getHours();
-    const currentMin = currectDate.getMinutes();
-    const currentSec = currectDate.getSeconds();
-    const modifiedDate = new Date(
-      year,
-      month,
-      day,
-      currentHour,
-      currentMin,
-      currentSec
-    );
-
-    const draggedEl = event.draggedEl;
-    const draggedElclass = draggedEl.className;
-    if (
-      draggedEl.classList.contains("external-event") &&
-      draggedElclass.indexOf("fc-event-draggable") == -1
-    ) {
-      const modifiedData = {
-        id: Math.floor(Math.random() * 100),
-        title: draggedEl.innerText,
-        start: modifiedDate,
-        className: draggedEl.className,
-      };
-      dispatch(onAddNewEvent(modifiedData));
-    }
-  };
-
-  //set the local language
-  const enLocal = {
-    "code": "en-nz",
-    "week": {
-      "dow": 1,
-      "doy": 4
-    },
-    "buttonHints": {
-      "prev": "Previous $0",
-      "next": "Next $0",
-      "today": "This $0"
-    },
-    "viewHint": "$0 view",
-    "navLinkHint": "Go to $0"
-  };
-  const [isLocal, setIsLocal] = useState(enLocal);
-  const handleChangeLocals = (value) => {
-    setIsLocal(value);
   };
 
   return (
-    <React.Fragment>
+    <>
       <DeleteModal
         show={deleteModal}
-        onDeleteClick={handleDeleteEvent}
+        onDeleteClick={handleDelete}
         onCloseClick={() => setDeleteModal(false)}
       />
       <div className="page-content">
-        <Container fluid={true}>
-          {/* Render Breadcrumb */}
-          <Breadcrumbs title="Calendar" breadcrumbItem="Calendar" />
+        <Container fluid>
+          <Breadcrumbs title="Entretien" breadcrumbItem="Calendrier des entretiens" />
           <Row>
-            <Col className="col-12">
-              <Row>
-                <Col xl={3}>
-                  <Card>
-                    <CardBody>
-                      <div className="d-flex gap-2">
-                        <div className="flex-grow-1">
-                          <select
-                            id="locale-selector"
-                            className="form-select"
-                            defaultValue={isLocal}
-                            onChange={(event) => {
-                              const selectedValue = event.target.value;
-                              const selectedLocale =
-                                allLocales.find((locale) => locale.code === selectedValue);
-                              handleChangeLocals(selectedLocale);
-                            }}
-                          >
-                            {(allLocales || []).map((localeCode, key) => (
-                              <option key={key} value={localeCode.code}>
-                                {localeCode.code}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-                        <Button
-                          color="primary"
-                          className="font-16"
-                          onClick={toggle}
-                        >
-                          <i className="mdi mdi-plus-circle-outline me-1" />
-                          Create New Event
-                        </Button>
-                      </div>
+            <Col xl={3}>
+              <Card>
+                <CardBody>
+                  <Button color="primary" onClick={handleDateClick} className="mb-3">
+                    <i className="mdi mdi-plus-circle-outline me-1" /> Ajouter Entretien
+                  </Button>
+                  <Row className="justify-content-center mt-4">
+                    <img src={verification} alt="" className="img-fluid d-block" />
+                  </Row>
+                </CardBody>
+              </Card>
+            </Col>
 
-                      <div id="external-events" className="mt-2">
-                        <br />
-                        <p className="text-muted">
-                          Drag and drop your event or click in the calendar
-                        </p>
-                        {categories &&
-                          (categories || []).map((category) => (
-                            <div
-                              className={`${category.type} external-event fc-event text-white`}
-                              key={"cat-" + category.id}
-                              draggable
-                              onDrag={event => onDrag(event, category)}
-                            >
-                              <i className="mdi mdi-checkbox-blank-circle font-size-11 me-2" />
-                              {category.title}
-                            </div>
-                          ))}
-                      </div>
-
-                      <Row className="justify-content-center mt-5">
-                        <img src={verification} alt="" className="img-fluid d-block" />
-                      </Row>
-                    </CardBody>
-                  </Card>
-                </Col>
-
-                <Col className="col-xl-9">
-                  {/* fullcalendar control */}
-                  <Card>
-                    <CardBody>
-                      <FullCalendar
-                        plugins={[
-                          BootstrapTheme,
-                          dayGridPlugin,
-                          listPlugin,
-                          interactionPlugin,
-                        ]}
-                        initialView="dayGridMonth"
-                        slotDuration={"00:15:00"}
-                        handleWindowResize={true}
-                        themeSystem="bootstrap"
-                        locale={isLocal}
-                        headerToolbar={{
-                          left: "prev,next today",
-                          center: "title",
-                          right: "dayGridMonth,dayGridWeek,dayGridDay,listWeek",
-                        }}
-                        events={events}
-                        editable={true}
-                        droppable={true}
-                        selectable={true}
-                        dateClick={handleDateClick}
-                        eventClick={handleEventClick}
-                        drop={onDrop}
-                      />
-                    </CardBody>
-                  </Card>
-                  <Modal
-                    isOpen={modalCategory}
-                    className={props.className}
-                    centered
-                  >
-                    <ModalHeader toggle={toggle}>
-                      {!!isEdit ? "Edit Event" : "Add Event"}
-                    </ModalHeader>
-                    <ModalBody className="p-4">
-                      <Form
-                        onSubmit={(e) => {
-                          e.preventDefault();
-                          categoryValidation.handleSubmit();
-                          return false;
-                        }}
-                      >
-                        <Row>
-                          <Col className="col-12">
-                            <div className="mb-3">
-                              <Label>Event Name</Label>
-                              <Input
-                                name="title"
-                                type="text"
-                                placeholder="Insert Event Name"
-                                onChange={categoryValidation.handleChange}
-                                onBlur={categoryValidation.handleBlur}
-                                value={categoryValidation.values.title || ""}
-                                invalid={
-                                  categoryValidation.touched.title && categoryValidation.errors.title ? true : false
-                                }
-                              />
-                              {categoryValidation.touched.title && categoryValidation.errors.title ? (
-                                <FormFeedback type="invalid">{categoryValidation.errors.title}</FormFeedback>
-                              ) : null}
-                            </div>
-                          </Col>
-                          <Col className="col-12">
-                            <div className="mb-3">
-                              <Label>Category</Label>
-                              <Input
-                                type="select"
-                                name="category"
-                                placeholder="All Day Event"
-                                onChange={categoryValidation.handleChange}
-                                onBlur={categoryValidation.handleBlur}
-                                value={categoryValidation.values.category || ""}
-                                invalid={
-                                  categoryValidation.touched.category && categoryValidation.errors.category ? true : false
-                                }
-                              >
-                                <option value="bg-danger">Danger</option>
-                                <option value="bg-success">Success</option>
-                                <option value="bg-primary">Primary</option>
-                                <option value="bg-info">Info</option>
-                                <option value="bg-dark">Dark</option>
-                                <option value="bg-warning">Warning</option>
-                              </Input>
-                              {categoryValidation.touched.category && categoryValidation.errors.category ? (
-                                <FormFeedback type="invalid">{categoryValidation.errors.category}</FormFeedback>
-                              ) : null}
-                            </div>
-                          </Col>
-                        </Row>
-
-                        <Row className="mt-2">
-                          <Col className="col-6">
-                            {isEdit &&
-                              <button type="button" className="btn btn-danger" id="btn-delete-event" onClick={() => { toggle(); setDeleteModal(true) }}>Delete</button>
-                            }
-                          </Col>
-
-                          <Col className="col-6 text-end">
-                            <button
-                              type="button"
-                              className="btn btn-light me-1"
-                              onClick={toggle}
-                            >
-                              Close
-                            </button>
-                            <button
-                              type="submit"
-                              className="btn btn-success"
-                              id="btn-save-event"
-                            >
-                              Save
-                            </button>
-                          </Col>
-                        </Row>
-                      </Form>
-                    </ModalBody>
-                  </Modal>
-                </Col>
-              </Row>
+            <Col xl={9}>
+              <Card>
+                <CardBody>
+                  <FullCalendar
+                    plugins={[BootstrapTheme, dayGridPlugin, interactionPlugin, listPlugin]}
+                    initialView="dayGridMonth"
+                    headerToolbar={{
+                      left: "prev,next today",
+                      center: "title",
+                      right: "dayGridMonth,dayGridWeek,dayGridDay,listWeek",
+                    }}
+                    themeSystem="bootstrap"
+                    locales={allLocales}
+                    locale="fr"
+                    events={entretienEvents}
+                    editable
+                    selectable
+                    dateClick={handleDateClick}
+                    eventClick={handleEventClick}
+                  />
+                </CardBody>
+              </Card>
             </Col>
           </Row>
         </Container>
+
+        <Modal isOpen={modalOpen} toggle={toggleModal} centered>
+          <ModalHeader toggle={toggleModal}>{isEdit ? "Modifier Entretien" : "Ajouter Entretien"}</ModalHeader>
+          <ModalBody>
+            <Form onSubmit={formik.handleSubmit}>
+              <div className="mb-3">
+                <Label>Produit</Label>
+                <Input
+                  type="select"
+                  name="produit"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.produit}
+                  invalid={formik.touched.produit && !!formik.errors.produit}
+                >
+                  <option value="">-- Sélectionner un produit --</option>
+                  {produits.map((prod) => (
+                    <option key={prod._id} value={prod._id}>
+                      {prod.code} - {prod.designation}
+                    </option>
+                  ))}
+                </Input>
+                <FormFeedback>{formik.errors.produit}</FormFeedback>
+              </div>
+
+              <div className="mb-3">
+                <Label>Commentaire </Label>
+                <Input
+                  name="commentaire"
+                  type="textarea"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.commentaire}
+                  invalid={formik.touched.commentaire && !!formik.errors.commentaire}
+                />
+                <FormFeedback>{formik.errors.commentaire}</FormFeedback>
+              </div>
+
+              <div className="mb-3">
+                <Label>Date</Label>
+                <Input
+                  type="date"
+                  name="date"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.date}
+                  invalid={formik.touched.date && !!formik.errors.date}
+                />
+                <FormFeedback>{formik.errors.date}</FormFeedback>
+              </div>
+
+              <div className="text-end">
+                <Button type="button" color="light" onClick={toggleModal} className="me-2">
+                  Fermer
+                </Button>
+                <Button type="submit" color="success">
+                  Sauvegarder
+                </Button>
+              </div>
+            </Form>
+          </ModalBody>
+        </Modal>
       </div>
-    </React.Fragment>
+    </>
   );
 };
 
-Calender.propTypes = {
-  events: PropTypes.array,
-  categories: PropTypes.array,
+EntretienCalendar.propTypes = {
   className: PropTypes.string,
-  onGetEvents: PropTypes.func,
-  onAddNewEvent: PropTypes.func,
-  onUpdateEvent: PropTypes.func,
-  onDeleteEvent: PropTypes.func,
-  onGetCategories: PropTypes.func,
 };
 
-export default Calender;
+export default EntretienCalendar;

@@ -1,3 +1,4 @@
+// Layout
 export * from "./layout/actions";
 
 // Authentication module
@@ -6,52 +7,44 @@ export * from "./auth/login/actions";
 export * from "./auth/forgetpwd/actions";
 export * from "./auth/profile/actions";
 
-//Ecommerce
+// Ecommerce
 export * from "./e-commerce/actions";
 
-//Calendar
+// Calendar
 export * from "./calendar/actions";
 
-//chat
+// Chat
 export * from "./chat/actions";
 
-//crypto
+// Crypto
 export * from "./crypto/actions";
 
-//invoices
+// Invoices
 export * from "./invoices/actions";
 
-//jobs
+// Jobs
 export * from "./jobs/actions";
 
-// projects
+// Projects
 export * from "./projects/actions";
 
-// tasks
+// Tasks
 export * from "./tasks/actions";
 
-// contacts
+// Contacts
 export * from "./contacts/actions";
 
-// contacts
+// Mails
 export * from "./mails/actions";
 
-//dashboard
+// Dashboards
 export * from "./dashboard/actions";
-
-//dashboard-crypto
 export * from "./dashboard-crypto/actions";
-
-//dashboard-saas
 export * from "./dashboard-saas/actions";
-
-//dashboard-blog
 export * from "./dashboard-blog/actions";
-
-//dashboard-jobs
 export * from "./dashboard-jobs/actions";
 
 // USERS
-export const GET_USERS = "GET_USERS"
-export const GET_USERS_SUCCESS = "GET_USERS_SUCCESS"
-export const GET_USERS_FAIL = "GET_USERS_FAIL"
+export const GET_USERS = "GET_USERS";
+export const GET_USERS_SUCCESS = "GET_USERS_SUCCESS";
+export const GET_USERS_FAIL = "GET_USERS_FAIL";

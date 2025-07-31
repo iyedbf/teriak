@@ -1,52 +1,68 @@
 import React, { useState } from "react";
-import "./fournisseurs-create.css";
 import {
-  Box, Button, Input, Select, Stack, useToast, Heading
+  Box,
+  Button,
+  Input,
+  Select,
+  Stack,
+  useToast,
+  Heading,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import ReactSelect from "react-select";
-import countries from "../../data/countries"; // Chemin relatif correct si tu es dans pages/Fournisseurs
+import countries from "../../data/countries";
+import { useNotification } from "../../context/NotificationContext";
+import './fournisseurs-create.css';
 
 const FournisseursCreate = () => {
   const [form, setForm] = useState({
     code: "",
     designation: "",
     pays: "",
-    statut: "actif"
+    statut: "actif",
   });
 
   const navigate = useNavigate();
   const toast = useToast();
+  const { pushNotification } = useNotification(); // ✅ ici
 
-  const handleChange = e => {
+  const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleCountryChange = selected => {
+  const handleCountryChange = (selected) => {
     setForm({ ...form, pays: selected.value });
   };
 
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       await axios.post("http://localhost:5000/api/fournisseurs", form, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`
-        }
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
       });
+
+      // ✅ Notification via contexte
+      pushNotification(
+        "Fournisseur ajouté",
+        `Le fournisseur "${form.designation}" a été ajouté avec succès.`
+      );
+
       toast({
         title: "Ajouté avec succès",
         status: "success",
         duration: 3000,
-        isClosable: true
+        isClosable: true,
       });
+
       navigate("/fournisseurs");
     } catch (err) {
       toast({
         title: "Erreur",
         description: err.response?.data?.message || "Erreur inconnue",
-        status: "error"
+        status: "error",
       });
     }
   };
@@ -73,7 +89,6 @@ const FournisseursCreate = () => {
               onChange={handleChange}
               isRequired
             />
-            {/* Sélecteur de pays avec autocomplétion */}
             <ReactSelect
               options={countries}
               onChange={handleCountryChange}

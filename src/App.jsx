@@ -1,48 +1,30 @@
 import PropTypes from "prop-types";
 import React from "react";
 
-import { Routes, Route } from "react-router-dom";
-import { connect } from "react-redux";
-
-import { useSelector } from "react-redux";
+import { Routes, Route, Navigate } from "react-router-dom";
+import { connect, useSelector } from "react-redux";
 import { createSelector } from "reselect";
 
-// Import Routes all
+// Import Routes
 import { authProtectedRoutes, publicRoutes } from "./routes/index";
 
-// Import all middleware
+// Middleware
 import Authmiddleware from "./routes/route";
 
-// layouts Format
+// Layouts
 import VerticalLayout from "./components/VerticalLayout/";
 import HorizontalLayout from "./components/HorizontalLayout/";
 import NonAuthLayout from "./components/NonAuthLayout";
 
-// Import scss
+// Styles
 import "./assets/scss/theme.scss";
 
-// Import Firebase Configuration file
-// import { initFirebaseBackend } from "./helpers/firebase_helper"
-
-import fakeBackend from "./helpers/AuthType/fakeBackend"
-// Activating fake backend
+// Fake backend
+import fakeBackend from "./helpers/AuthType/fakeBackend";
 fakeBackend();
 
-// const firebaseConfig = {
-//   apiKey: import.meta.env.VITE_APP_APIKEY,
-//   authDomain: import.meta.env.VITE_APP_AUTHDOMAIN,
-//   databaseURL: import.meta.env.VITE_APP_DATABASEURL,
-//   projectId: import.meta.env.VITE_APP_PROJECTID,
-//   storageBucket: import.meta.env.VITE_APP_STORAGEBUCKET,
-//   messagingSenderId: import.meta.env.VITE_APP_MESSAGINGSENDERID,
-//   appId: import.meta.env.VITE_APP_APPID,
-//   measurementId: import.meta.env.VITE_APP_MEASUREMENTID,
-// };
-
-// init firebase backend
-// initFirebaseBackend(firebaseConfig)
-
 const App = (props) => {
+  // Sélection du layout depuis Redux
   const LayoutProperties = createSelector(
     (state) => state.Layout,
     (layout) => ({
@@ -50,28 +32,18 @@ const App = (props) => {
     })
   );
 
-  const {
-    layoutType
-  } = useSelector(LayoutProperties);
+  const { layoutType } = useSelector(LayoutProperties);
 
-  function getLayout(layoutType) {
-    let layoutCls = VerticalLayout;
-    switch (layoutType) {
-      case "horizontal":
-        layoutCls = HorizontalLayout;
-        break;
-      default:
-        layoutCls = VerticalLayout;
-        break;
-    }
-    return layoutCls;
-  }
+  // Choix du layout selon configuration
+  const Layout = layoutType === "horizontal" ? HorizontalLayout : VerticalLayout;
 
-  const Layout = getLayout(layoutType);
+  // Vérification de l'authentification
+  const isAuthenticated = localStorage.getItem("authUser"); // ou "token" si c’est ce que vous utilisez
 
   return (
     <React.Fragment>
       <Routes>
+        {/* Routes publiques */}
         {publicRoutes.map((route, idx) => (
           <Route
             path={route.path}
@@ -81,6 +53,7 @@ const App = (props) => {
           />
         ))}
 
+        {/* Routes protégées */}
         {authProtectedRoutes.map((route, idx) => (
           <Route
             path={route.path}
@@ -93,6 +66,21 @@ const App = (props) => {
             exact={true}
           />
         ))}
+
+        {/* ✅ Redirection dynamique selon l'état d'authentification */}
+        <Route
+          path="/"
+          element={
+            isAuthenticated ? (
+              <Navigate to="/dashboard" />
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
+        />
+
+        {/* Fallback route vers 404 si aucune correspondance */}
+        <Route path="*" element={<Navigate to="/pages-404" />} />
       </Routes>
     </React.Fragment>
   );

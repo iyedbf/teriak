@@ -4,7 +4,7 @@ import { Container, Row, Col } from "reactstrap"
 const Footer = () => {
   return (
     <React.Fragment>
-      
+   
     </React.Fragment>
   )
 }

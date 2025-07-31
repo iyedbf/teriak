@@ -9,58 +9,47 @@ import Account from "./auth/register/reducer";
 import ForgetPassword from "./auth/forgetpwd/reducer";
 import Profile from "./auth/profile/reducer";
 
-//E-commerce
+// E-commerce
 import ecommerce from "./e-commerce/reducer";
 
-//Calendar
+// Calendar
 import calendar from "./calendar/reducer";
 
-//chat
+// Chat
 import chat from "./chat/reducer";
 
-//crypto
+// Crypto
 import crypto from "./crypto/reducer";
 
-//invoices
+// Invoices
 import invoices from "./invoices/reducer";
 
-//jobs
+// Jobs
 import JobReducer from "./jobs/reducer";
 
-//projects
+// Projects
 import projects from "./projects/reducer";
 
-
-//tasks
+// Tasks
 import tasks from "./tasks/reducer";
 
-//contacts
+// Contacts
 import contacts from "./contacts/reducer";
 
-//mails
+// Mails
 import mails from "./mails/reducer";
 
-//Dashboard 
+// Dashboards
 import Dashboard from "./dashboard/reducer";
-
-//Dasboard saas
 import DashboardSaas from "./dashboard-saas/reducer";
-
-//Dasboard crypto
 import DashboardCrypto from "./dashboard-crypto/reducer";
-
-//Dasboard blog
 import DashboardBlog from "./dashboard-blog/reducer";
-
-//Dasboard job
 import DashboardJob from "./dashboard-jobs/reducer";
 
-
-import users from "./users/reducer";
-
+// Users
+import users from "./users/reducer"; // ✅ à ne pas dupliquer
 
 const rootReducer = combineReducers({
-  // public
   Layout,
   Login,
   Account,
@@ -80,9 +69,8 @@ const rootReducer = combineReducers({
   DashboardSaas,
   DashboardCrypto,
   DashboardBlog,
-  users,
   DashboardJob,
-users              
+  users, // ✅ une seule fois ici
 });
 
 export default rootReducer;
