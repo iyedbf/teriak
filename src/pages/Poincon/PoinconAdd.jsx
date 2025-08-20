@@ -73,34 +73,55 @@ const PoinconAdd = () => {
     setPoincon((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        alert("Token manquant, veuillez vous connecter.");
-        return;
-      }
-
-      const dataToSend = {
-        ...poincon,
-        fournisseur: getId(poincon.fournisseur),
-        marque: getId(poincon.marque),
-        // forme et etat envoyés tels quels (chaine)
-      };
-
-      await axios.post("http://localhost:5000/api/poincons", dataToSend, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      pushNotification("Succès", `Poinçon ajouté avec succès.`);
-      navigate("/poincon-list");
-    } catch (err) {
-      console.error("Erreur lors de l'ajout :", err);
-      alert(err.response?.data?.message || "Erreur serveur.");
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("Token manquant, veuillez vous connecter.");
+      return;
     }
-  };
+
+    // Prépare les données à envoyer (avec uniquement les _id des objets)
+    const dataToSend = {
+      codeFormat: poincon.codeFormat,
+      forme: poincon.forme,
+      fournisseur: getId(poincon.fournisseur),
+      marque: getId(poincon.marque),
+      nbrComposants: poincon.nbrComposants,
+      statut: poincon.statut,
+      etat: poincon.etat,
+    };
+
+    // Crée un FormData et ajoute chaque champ un par un
+    const formData = new FormData();
+    for (const key in dataToSend) {
+      formData.append(key, dataToSend[key]);
+    }
+
+    // Ajoute le fichier si présent
+    if (poincon.ficheTechnique) {
+      formData.append("ficheTechnique", poincon.ficheTechnique);
+    }
+
+    // Envoie la requête POST avec axios
+    await axios.post("http://localhost:5000/api/poincons", formData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "multipart/form-data", // axios peut le gérer automatiquement mais c'est OK de le préciser
+      },
+    });
+
+    pushNotification("Succès", `Poinçon ajouté avec succès.`);
+    navigate("/poincon-list");
+
+  } catch (err) {
+    console.error("Erreur lors de l'ajout :", err);
+    alert(err.response?.data?.message || "Erreur serveur.");
+  }
+};
+
 
   if (loading) return <p>Chargement...</p>;
   if (erreur) return <p style={{ color: "red" }}>{erreur}</p>;
@@ -213,7 +234,23 @@ const PoinconAdd = () => {
             ))}
           </select>
         </div>
+        <div className="form-group full-width">
+  <label>Fiche Technique (PDF ou autre)</label>
+  <input
+    type="file"
+    accept=".pdf,.doc,.docx,.jpg,.png"
+    name="ficheTechnique"
+    onChange={(e) =>
+      setPoincon((prev) => ({
+        ...prev,
+        ficheTechnique: e.target.files[0],
+      }))
+    }
+  />
+</div>
 
+
+            
         <div className="form-group full-width">
           <button type="submit" className="actions-btn edit">
             💾 Ajouter

@@ -1,6 +1,8 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
 
+
+
 // Pages Component
 import Chat from "../pages/Chat/Chat";
 
@@ -211,7 +213,7 @@ import MarqueAdd from "../pages/Marque/MarqueAdd";
 import FormeAdd from "../pages/Poincon/FormeAdd";
 import UtilisationList from "../pages/Utilisation/Utilisation-list";
 import UtilisationAdd from "../pages/Utilisation/UtilisationAdd";
-
+import PermissionsAdmin from "../pages/PermissionAdmin/PermissionAdmin";
 const authProtectedRoutes = [
   { path: "/dashboard", component: <Dashboard /> },
   { path: "/dashboard-saas", component: <DashboardSaas /> },
@@ -224,7 +226,7 @@ const authProtectedRoutes = [
 { path: "/users/edit/:id", component: <UsersEdit /> },
 { path: "/users/:id", component: <UsersDetail /> },
 { path: "/users-list", component: <UsersList /> },
-
+ { path: "/PermissionsAdmin", component: <PermissionsAdmin /> },
 
 // utilisation 
   { path: "/utilisation-list", component: <UtilisationList /> },

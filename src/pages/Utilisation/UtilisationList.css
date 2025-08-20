@@ -188,13 +188,15 @@
 
 .modal-content {
   background-color: #ffffff;
-    opacity: 1 ;
   border-radius: 8px;
+  isolation :isolate;
   padding: 30px;
   max-width: 600px;
   width: 100%;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
   position: relative;
+    z-index: 10000;
+
 }
 
 /* === TITRE MODAL === */

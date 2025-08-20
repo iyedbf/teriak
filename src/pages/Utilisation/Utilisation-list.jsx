@@ -246,7 +246,7 @@ const UtilisationList = () => {
       {/* Modal */}
       {modalOpen && (
         <div className="modal-overlay">
-          <div className="modal-content">
+          <div className="modal-content"style={{ backgroundColor: "white" }}>
             <h3>Modifier Utilisation</h3>
             <form
               onSubmit={(e) => {
@@ -305,10 +305,10 @@ const UtilisationList = () => {
 
               <div className="modal-buttons">
                 <button type="submit" className="btn btn-save">
-                  💾 Sauvegarder
+                   Sauvegarder
                 </button>
                 <button type="button" className="btn btn-cancel" onClick={closeModal}>
-                  ✖ Annuler
+                  Annuler
                 </button>
               </div>
             </form>
